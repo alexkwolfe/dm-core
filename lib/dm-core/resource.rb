@@ -248,7 +248,7 @@ module DataMapper
       attributes = {}
 
       lazy_load(properties)
-      fields.each do |property|
+      _fields.each do |property|
         if model.public_method_defined?(name = property.name)
           key = case key_on
             when :name  then name
@@ -609,7 +609,7 @@ module DataMapper
     #
     # @api semipublic
     def query
-      Query.new(repository, model, :fields => fields, :conditions => conditions)
+      Query.new(repository, model, :fields => _fields, :conditions => conditions)
     end
 
     protected
@@ -707,7 +707,7 @@ module DataMapper
     #   names of attributes that have been loaded
     #
     # @api private
-    def fields
+    def _fields
       properties.select do |property|
         property.loaded?(self) || (new? && property.default?)
       end
@@ -749,7 +749,7 @@ module DataMapper
     #
     # @api private
     def lazy_load(properties)
-      eager_load(properties - fields)
+      eager_load(properties - _fields)
     end
 
     # Reloads specified attributes
